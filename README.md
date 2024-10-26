@@ -18,6 +18,7 @@ Todo List:
 - (POSSIBLY) Use tail to pull person 1 tile to them if they are close enough (not sure on this one yet)
 - Piercing gaze that panics target, like a weak power of Medusa (not sure on this one yet either)
 - (POSSIBLY) Heat mechanics, this would be a big addition so is only an idea for now, but cold blooded and all that
+- Dissable mount riding
 
 ## Lamia Spells and Interactions
 - Piercing Gaze (again, maybe not sure)
