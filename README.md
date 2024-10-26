@@ -2,9 +2,10 @@
 ## LAMIA PROJECT
 
 Todo List:
-- Lamia tail body slot
+- Lamia tail body slot, tail should have natural armor value for 'scales'
 - Rerout attacks from legs and feet to upper tail or lower tail
 - Allow recolor of tail through sprite accessories
+- Add a couple clothing options for tail, stocking / skirt
 - Snek language (maybe same as sissean?)
 - LORE and RENAME to fit Ratwood
 - Coil grabbing and crushing mechanics
