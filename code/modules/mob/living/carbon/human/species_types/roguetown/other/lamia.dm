@@ -1,8 +1,8 @@
-/mob/living/carbon/human/species/tieberian
-	race = /datum/species/tieberian
+/mob/living/carbon/human/species/lamia
+	race = /datum/species/lamia
 
-/datum/species/tieberian
-	name = "Lamia (TEMPORARY)"
+/datum/species/lamia
+	name = "Lamia"
 	id = "lamia"
 	desc = "<b>Lamia (TEMPORARY)</b><br>\
 	Snek."
@@ -63,6 +63,7 @@
 		/datum/customizer/organ/penis/human,
 		/datum/customizer/organ/breasts/human,
 		/datum/customizer/organ/vagina/human,
+		/datum/customizer/organ/tail/lamia,
 		)
 	body_markings = list(
 		/datum/body_marking/tonage,
@@ -72,22 +73,22 @@
 		//Put snek language here
 	)
 
-/datum/species/tieberian/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+/datum/species/lamia/on_species_gain(mob/living/carbon/C, datum/species/old_species)
 	..()
 	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 
-/datum/species/tieberian/after_creation(mob/living/carbon/C)
+/datum/species/lamia/after_creation(mob/living/carbon/C)
 	..()
 	to_chat(C, "<span class='info'>I can speak (LAMIA LANGUAGE) with ,s before my speech.</span>")
 
-/datum/species/tieberian/on_species_loss(mob/living/carbon/C)
+/datum/species/lamia/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	UnregisterSignal(C, COMSIG_MOB_SAY)
 
-/datum/species/tieberian/qualifies_for_rank(rank, list/features)
+/datum/species/lamia/qualifies_for_rank(rank, list/features)
 	return TRUE
 
-/datum/species/tieberian/get_skin_list()
+/datum/species/lamia/get_skin_list()
 	return list(	//Change to tribal heratiges
 		"Castillian" = SKIN_COLOR_CASTILLIAN,
 		"Mysterious" = SKIN_COLOR_MYSTERIOUS,
@@ -98,7 +99,7 @@
 		"Dispater" = SKIN_COLOR_DISPATER,
 	)
 
-/datum/species/tieberian/get_hairc_list()
+/datum/species/lamia/get_hairc_list()
 	return sortList(list(
 	"black - oil" = "181a1d",
 	"black - cave" = "201616",
@@ -106,7 +107,7 @@
 	"black - midnight" = "1d1b2b"
 	))
 
-/datum/species/tieberian/random_name(gender,unique,lastname)
+/datum/species/lamia/random_name(gender,unique,lastname)
 
 	var/randname
 	if(unique)
@@ -127,33 +128,33 @@
 			randname = pick( world.file2list("strings/rt/names/other/tieff.txt") )
 	return randname
 
-/datum/species/tieberian/random_surname()
+/datum/species/lamia/random_surname()
 	return " [pick(world.file2list("strings/rt/names/other/tieflast.txt"))]"
 /* Commenting out Spanish Tieflings for now.
 //Groups of Accents for each race set by associated 'skin_tone', see 'get_skin_list' above
 // "full" group in JSON lists
-/datum/species/tieberian/get_accent(mob/living/carbon/human/H)
+/datum/species/lamia/get_accent(mob/living/carbon/human/H)
 		switch(H.skin_tone)
 				if(SKIN_COLOR_CASTILLIAN)
 						return strings("spanish_replacement.json", "full")
 		return null
 
 // "start" group in JSON lists
-/datum/species/tieberian/get_accent_start(mob/living/carbon/human/H)
+/datum/species/lamia/get_accent_start(mob/living/carbon/human/H)
 		switch(H.skin_tone)
 				if(SKIN_COLOR_CASTILLIAN)
 						return strings("spanish_replacement.json", "start")
 		return null
 
 // "end" group in JSON lists
-/datum/species/tieberian/get_accent_end(mob/living/carbon/human/H)
+/datum/species/lamia/get_accent_end(mob/living/carbon/human/H)
 		switch(H.skin_tone)
 				if(SKIN_COLOR_CASTILLIAN)
 						return strings("spanish_replacement.json", "end")
 		return null
 
 // "syllable" group in JSON lists
-/datum/species/tieberian/get_accent_any(mob/living/carbon/human/H)
+/datum/species/lamia/get_accent_any(mob/living/carbon/human/H)
 		switch(H.skin_tone)
 				if(SKIN_COLOR_CASTILLIAN)
 						return strings("spanish_replacement.json", "syllable")
