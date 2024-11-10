@@ -38,3 +38,14 @@
 		/datum/sprite_accessory/accessory/choker,
 		/datum/sprite_accessory/accessory/chokere,
 		)
+
+/datum/customizer/organ/tail/lamia
+	name = "Lamia Tail"
+	customizer_choices = list(/datum/customizer_choice/organ/tail/lamia)
+	abstract_type = /datum/customizer/organ/tail/lamia
+
+/datum/customizer_choice/organ/tail/lamia
+	name = "Lamia tail"
+	sprite_accessories = list(/datum/sprite_accessory/lamia/fm)
+	abstract_type = /datum/customizer_choice/organ/tail/lamia
+	organ_type = /obj/item/organ/tail

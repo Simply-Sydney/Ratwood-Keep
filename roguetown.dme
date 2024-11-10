@@ -2484,6 +2484,7 @@
 #include "code\modules\mob\dead\new_player\sprite_accessory\hair.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\head_features.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\horns.dm"
+#include "code\modules\mob\dead\new_player\sprite_accessory\lamia.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\misc.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\neck_features.dm"
 #include "code\modules\mob\dead\new_player\sprite_accessory\snouts.dm"
