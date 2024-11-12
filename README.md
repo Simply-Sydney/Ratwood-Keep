@@ -2,7 +2,7 @@
 ## LAMIA PROJECT
 
 Todo List:
-- [ ] test
+- [x] test
 - [ ] Lamia tail body slot, tail should have natural armor value for 'scales'
 - [ ] Rerout attacks from legs and feet to upper tail or lower tail
 - [ ] Allow recolor of tail through sprite accessories
