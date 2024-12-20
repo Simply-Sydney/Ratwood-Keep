@@ -169,3 +169,24 @@
 
 /datum/species/seelie/random_surname()
 	return " [pick(world.file2list("strings/rt/names/other/fairyf.txt"))]"
+
+/mob/living/carbon/human/species/seelie/npc
+	var/timeS
+
+/mob/living/carbon/human/species/seelie/npc/Initialize(mapload, mob/living/user)
+	. = ..()
+	timeS = world.time + 20 SECONDS
+	src.real_name = user.real_name
+	src.overlays = user.overlays
+	walk_away(src, user, 20, update_movespeed())
+	ADD_TRAIT(src, TRAIT_PIERCEIMMUNE, TRAIT_GENERIC) //makes it so weapons don't embbed
+	ADD_TRAIT(src, TRAIT_HARDDISMEMBER, TRAIT_GENERIC) //makes it so you can't replicate limbs
+	src.internal_organs = list() //makes it so you can't replicate organs
+
+/mob/living/carbon/human/species/seelie/npc/Life()
+	. = ..()
+	if(world.time > timeS)
+		qdel(src)
+/mob/living/carbon/human/species/seelie/npc/DeadLife()
+	. = ..()
+	qdel(src)

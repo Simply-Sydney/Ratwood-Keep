@@ -331,3 +331,18 @@
 	if(growed)
 		visible_message(span_green("[usr] sates the nearby crops with magical nutrients!"))
 	return growed
+
+/obj/effect/proc_holder/spell/targeted/clone
+	name = "Clone"
+	range = 0
+	overlay_state = "tamebeast"
+	releasedrain = 30
+	charge_max = 0	//Decreased from 3 minutes. Intermitant weirdness, wouldnt always work even if conditions were met, lowering cooldown should help
+	max_targets = 0
+	cast_without_targets = TRUE
+	sound = 'sound/magic/churn.ogg'
+
+/obj/effect/proc_holder/spell/targeted/clone/cast(mob/user)
+	. = ..()
+	new /mob/living/carbon/human/species/seelie/npc(user.loc, user)
+	return TRUE
