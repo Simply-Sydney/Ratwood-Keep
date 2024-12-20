@@ -69,6 +69,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	ADD_TRAIT(owner.current, TRAIT_NOSLEEP, "[type]")
 	ADD_TRAIT(owner.current, TRAIT_LIMPDICK, "[type]")
 	ADD_TRAIT(owner.current, TRAIT_VAMPMANSION, "[type]")
+	ADD_TRAIT(owner.current, TRAIT_MEDIUMARMOR, "[type]")
+	ADD_TRAIT(owner.current, TRAIT_HEAVYARMOR, "[type]")
 	for(var/obj/structure/fluff/traveltile/vampire/tile in GLOB.traveltiles)
 		tile.show_travel_tile(owner.current)
 	ADD_TRAIT(owner.current, TRAIT_VAMP_DREAMS, "[type]")
@@ -153,7 +155,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 
 	var/selected = input(src, "Which class was I?", "VAMPIRE SPAWN") as anything in visoptions
 
-	for(var/datum/advclass/A in SSrole_class_handler.sorted_class_categories[CTAG_ALLCLASS])
+	for(var/datum/subclass/A in SSrole_class_handler.sorted_class_categories[CTAG_ALLCLASS])
 		if(A.name == selected)
 			equipOutfit(A.outfit)
 			return
@@ -337,6 +339,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	V.update_hair()
 	V.update_body_parts(redraw = TRUE)
 	V.mob_biotypes = MOB_UNDEAD
+	V.faction = list("undead")
 	if(isspawn)
 		V.vampire_disguise()
 
@@ -522,11 +525,11 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	if(!msg)
 		return
 	for(var/datum/mind/V in C.vampires)
-		to_chat(V, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(V, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 	for(var/datum/mind/D in C.deathknights)
-		to_chat(D, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(D, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 	for(var/mob/dead/observer/rogue/arcaneeye/A in GLOB.mob_list)
-		to_chat(A, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(A, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 
 /mob/living/carbon/human/proc/punish_spawn()
 	set name = "Punish Minion"
@@ -627,7 +630,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	var/datum/antagonist/vampirelord/lord = user.mind.has_antag_datum(/datum/antagonist/vampirelord)
 	if(user.mind.special_role != "Vampire Lord")
 		return
-	var/choice = input(user,"What to do?", "ROGUETOWN") as anything in useoptions|null
+	var/choice = input(user,"What to do?", "RATWOOD") as anything in useoptions|null
 	switch(choice)
 		if("Grow Power")
 			if(lord.vamplevel == 4)
@@ -1225,11 +1228,11 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	if(!msg)
 		return
 	for(var/datum/mind/V in C.vampires)
-		to_chat(V, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(V, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 	for(var/datum/mind/D in C.deathknights)
-		to_chat(D, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(D, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 	for(var/mob/dead/observer/rogue/arcaneeye/A in GLOB.mob_list)
-		to_chat(A, span_boldnotice("A message from [src.real_name]:[msg]"))
+		to_chat(A, span_boldnotice("A message from [src.real_name]: \"[msg]\""))
 
 /mob/dead/observer/rogue/arcaneeye/proc/eye_up()
 	set category = "Arcane Eye"
@@ -1416,3 +1419,22 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 					sleep(50)
 					L.Sleeping(300)
 
+/obj/effect/proc_holder/spell/targeted/shapeshift/bat
+	name = "Bat Form"
+	desc = ""
+	invocation = ""
+	vitaedrain = 2500
+	charge_max = 60
+	cooldown_min = 50
+	die_with_shapeshifted_form =  FALSE
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/gaseousform
+	name = "Mist Form"
+	desc = ""
+	invocation = ""
+	vitaedrain = 2500
+	charge_max = 60
+	cooldown_min = 50
+	die_with_shapeshifted_form =  FALSE
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/gaseousform

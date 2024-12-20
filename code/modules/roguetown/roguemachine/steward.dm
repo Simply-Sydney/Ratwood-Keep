@@ -15,8 +15,7 @@
 	max_integrity = 0
 	anchored = TRUE
 	layer = BELOW_OBJ_LAYER
-	locked = FALSE
-	lockid = "steward"
+	var/keycontrol = "steward"
 	var/current_tab = TAB_MAIN
 	var/compact = FALSE
 
@@ -24,7 +23,7 @@
 /obj/structure/roguemachine/steward/attackby(obj/item/P, mob/user, params)
 	if(istype(P, /obj/item/key))
 		var/obj/item/key/K = P
-		if(K.lockid == lockid)
+		if(K.lockid == keycontrol)
 			locked = !locked
 			playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 			update_icon()
@@ -32,10 +31,9 @@
 		else
 			to_chat(user, span_warning("Wrong key."))
 			return
-	if(istype(P, /obj/item/keyring))
-		var/obj/item/keyring/K = P
-		for(var/obj/item/key/KE in K.keys)
-			if(KE.lockid == lockid)
+	if(istype(P, /obj/item/storage/keyring))
+		for(var/obj/item/key/KE in P.contents)
+			if(KE.lockid == keycontrol)
 				locked = !locked
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 				update_icon()
@@ -85,7 +83,7 @@
 		SStreasury.treasury_value += amt
 		SStreasury.log_to_steward("+[amt] exported [D.name]")
 		if(amt >= 100) //Only announce big spending.
-			scom_announce("Rockhill Peak exports [D.name] for [amt] mammon.")
+			scom_announce("Rockhill exports [D.name] for [amt] mammon.")
 		D.lower_demand()
 	if(href_list["togglewithdraw"])
 		var/datum/roguestock/D = locate(href_list["togglewithdraw"]) in SStreasury.stockpile_datums

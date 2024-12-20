@@ -1,13 +1,13 @@
 // This code handles different species in the game.
 
 GLOBAL_LIST_EMPTY(roundstart_races)
-
 /datum/species
 	var/id	// if the game needs to manually check my race to do something not included in a proc here, it will use this
 	var/limbs_id		//this is used if you want to use a different species limb sprites. Mainly used for angels as they look like humans.
 	var/clothes_id //id for clothes
 	var/name	// this is the fluff name. these will be left generic (such as 'Lizardperson' for the lizard race) so servers can change them to whatever
 	var/desc
+	var/expanded_desc //For the species blurb window.
 	var/default_color = "#FFF"	// if alien colors are disabled, this is the color that will be used by that race
 	var/limbs_icon_m
 	var/limbs_icon_f
@@ -70,7 +70,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/siemens_coeff = 1 //base electrocution coefficient
 	var/damage_overlay_type = "human" //what kind of damage overlays (if any) appear on our species when wounded?
 	var/fixed_mut_color = "" //to use MUTCOLOR with a fixed color that's independent of dna.feature["mcolor"]
-	var/inert_mutation 	= DWARFISM //special mutation that can be found in the genepool. Dont leave empty or changing species will be a headache
 	var/deathsound //used to set the mobs deathsound on species change
 	var/grab_sound //Special sound for grabbing
 	var/datum/outfit/outfit_important_for_life /// A path to an outfit that is important for species life e.g. plasmaman outfit
@@ -451,18 +450,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	for(var/X in inherent_traits)
 		ADD_TRAIT(C, X, SPECIES_TRAIT)
 
-	if(TRAIT_VIRUSIMMUNE in inherent_traits)
-		for(var/datum/disease/A in C.diseases)
-			A.cure(FALSE)
-
 	if(TRAIT_TOXIMMUNE in inherent_traits)
 		C.setToxLoss(0, TRUE, TRUE)
 
 	if(TRAIT_NOMETABOLISM in inherent_traits)
 		C.reagents.end_metabolization(C, keep_liverless = TRUE)
-
-	if(TRAIT_RADIMMUNE in inherent_traits)
-		C.dna.remove_all_mutations() // Radiation immune mobs can't get mutations normally
 
 	if(inherent_factions)
 		for(var/i in inherent_factions)
@@ -500,14 +492,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		C.Digitigrade_Leg_Swap(TRUE)
 	for(var/X in inherent_traits)
 		REMOVE_TRAIT(C, X, SPECIES_TRAIT)
-
-	//If their inert mutation is not the same, swap it out
-	if((inert_mutation != new_species.inert_mutation) && LAZYLEN(C.dna.mutation_index) && (inert_mutation in C.dna.mutation_index))
-		C.dna.remove_mutation(inert_mutation)
-		//keep it at the right spot, so we can't have people taking shortcuts
-		var/location = C.dna.mutation_index.Find(inert_mutation)
-		C.dna.mutation_index[location] = new_species.inert_mutation
-		C.dna.mutation_index[new_species.inert_mutation] = create_sequence(new_species.inert_mutation)
 
 	if(inherent_factions)
 		for(var/i in inherent_factions)
@@ -1081,8 +1065,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 	if(radiation > RAD_MOB_MUTATE)
 		if(prob(1))
-			to_chat(H, span_danger("I mutate!"))
-			H.easy_randmut(NEGATIVE+MINOR_NEGATIVE)
+			to_chat(H, "<span class='danger'>I mutate!</span>")
 			H.emote("gasp")
 			H.domutcheck()
 
@@ -1152,7 +1135,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				to_chat(target, span_danger("[user] stole my [I.name]!"))*/
 		var/def_zone = check_zone(user.zone_selected)
 		var/obj/item/bodypart/affecting = target.get_bodypart(def_zone)
-		for(var/obj/item/embedded in affecting.embedded_objects)
+		for(var/obj/item/embedded in affecting?.embedded_objects)
 			target.grabbedby(user, 1, item_override = embedded)
 			return TRUE
 		target.grabbedby(user)
@@ -1812,12 +1795,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	return 1
 
 /datum/species/proc/on_hit(obj/projectile/P, mob/living/carbon/human/H)
-	// called when hit by a projectile
-	switch(P.type)
-		if(/obj/projectile/energy/floramut) // overwritten by plants/pods
-			H.show_message(span_notice("The radiation beam dissipates harmlessly through my body."))
-		if(/obj/projectile/energy/florayield)
-			H.show_message(span_notice("The radiation beam dissipates harmlessly through my body."))
 
 /datum/species/proc/bullet_act(obj/projectile/P, mob/living/carbon/human/H, def_zone = BODY_ZONE_CHEST)
 	// called before a projectile hit
@@ -1830,15 +1807,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 /obj/item/proc/blockproj(mob/living/carbon/human/H)
 	return
-
-/////////////
-//BREATHING//
-/////////////
-
-/datum/species/proc/breathe(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		return TRUE
-
 
 /datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/H)
 	if(!environment)
@@ -2278,3 +2246,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/modifier = -distance
 	if(!prob(STASPD+skill_modifier+modifier))
 		Paralyze(15)
+
+/client/proc/view_species_info(species_info)
+	var/datum/browser/popup = new(src.mob, "species_info", "<center>BESTIARY</center>", 460, 550)
+	popup.set_content(species_info)
+	popup.open()

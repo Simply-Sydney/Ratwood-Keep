@@ -288,10 +288,6 @@
 
 	dat += "<BR><B>Back:</B> <A href='?src=[REF(src)];item=[SLOT_BACK]'>[back ? back : "Nothing"]</A>"
 
-
-	if(istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank))
-		dat += "<BR><A href='?src=[REF(src)];internal=1'>[internal ? "Disable Internals" : "Set Internals"]</A>"
-
 	if(handcuffed)
 		dat += "<BR><A href='?src=[REF(src)];item=[SLOT_HANDCUFFED]'>Handcuffed</A>"
 	if(legcuffed)
@@ -357,6 +353,18 @@
 	if(fire_stacks <= 0)
 		ExtinguishMob(TRUE)
 	return
+
+/mob/living/carbon/resist_leash()
+	to_chat(src, span_notice("I reach for the hook on my collar..."))
+	//Determine how long it takes to remove the leash
+	var/deleash = 15
+	if(src.handcuffed)
+		deleash = 60
+	if(move_after(src, deleash, 0, target = src))
+		if(!QDELETED(src))
+			to_chat(src, "<span class='warning'>[src] has removed their leash!</span>")
+			src.remove_status_effect(/datum/status_effect/leash_pet)
+
 
 /mob/living/carbon/resist_restraints()
 	var/obj/item/I = null
@@ -590,9 +598,8 @@
 		else
 			if(message)
 				visible_message(span_danger("[src] pukes!"), span_danger("I puke!"))
-				if(!isflyperson(src))
-					SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "vomit", /datum/mood_event/vomit)
-					add_stress(/datum/stressevent/vomit)
+				SEND_SIGNAL(src, COMSIG_ADD_MOOD_EVENT, "vomit", /datum/mood_event/vomit)
+				add_stress(/datum/stressevent/vomit)
 	else
 		if(NOBLOOD in dna?.species?.species_traits)
 			return TRUE
@@ -693,6 +700,7 @@
 		add_movespeed_modifier(MOVESPEED_ID_CARBON_SOFTCRIT, TRUE, multiplicative_slowdown = SOFTCRIT_ADD_SLOWDOWN)
 	else
 		remove_movespeed_modifier(MOVESPEED_ID_CARBON_SOFTCRIT, TRUE)
+	SEND_SIGNAL(src, COMSIG_LIVING_HEALTH_UPDATE)
 
 /mob/living/carbon/update_stamina()
 	var/stam = getStaminaLoss()
@@ -1035,10 +1043,6 @@
 	var/obj/item/organ/brain/B = getorgan(/obj/item/organ/brain)
 	if(B)
 		B.brain_death = FALSE
-	for(var/thing in diseases)
-		var/datum/disease/D = thing
-		if(D.severity != DISEASE_SEVERITY_POSITIVE)
-			D.cure(FALSE)
 	var/datum/component/rot/corpse/CR = GetComponent(/datum/component/rot/corpse)
 	if(CR)
 		CR.amount = 0

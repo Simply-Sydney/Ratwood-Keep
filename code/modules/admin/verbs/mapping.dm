@@ -40,8 +40,7 @@ GLOBAL_LIST_INIT(admin_verbs_debug_mapping, list(
 	/client/proc/stop_line_profiling,
 	/client/proc/show_line_profiling,
 	/client/proc/create_mapping_job_icons,
-	/client/proc/debug_z_levels,
-	/client/proc/place_ruin
+	/client/proc/debug_z_levels
 ))
 GLOBAL_PROTECT(admin_verbs_debug_mapping)
 
@@ -231,7 +230,6 @@ GLOBAL_VAR_INIT(say_disabled, FALSE)
 					qdel(I)
 				randomize_human(D)
 				JB.equip(D, TRUE, FALSE)
-				COMPILE_OVERLAYS(D)
 				var/icon/I = icon(getFlatIcon(D), frame = 1)
 				final.Insert(I, JB.title)
 	qdel(D)

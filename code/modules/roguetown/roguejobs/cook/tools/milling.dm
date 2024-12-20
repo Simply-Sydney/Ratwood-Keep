@@ -1,6 +1,6 @@
 /obj/structure/fluff/millstone
 	name = "millstone"
-	desc = "A millstone used to grind grain into flour."
+	desc = "A millstone used to grind grain into flour." //People have been mistaking the "It's Empty" on examine for it eating grain. This is not the case.
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "millstone"
 	density = TRUE
@@ -19,13 +19,13 @@
 	qdel(to_grind)
 	..()
 
-/obj/structure/fluff/millstone/examine(mob/user)
+/obj/structure/fluff/millstone/examine(mob/user, obj/structure/fluff/millstone/src_object)
 	. = ..()
 
 /obj/structure/fluff/millstone/proc/grindUp(list/obj/item/to_grind, mob/user)
 	for(var/obj/item/itemtogrind in to_grind)
 		if(do_after(user, 8, target = src))
-			reagents.add_reagent_list(itemtogrind.grind_results)
+			new itemtogrind.mill_result(src.loc)
 			to_grind -= itemtogrind
 			apply_farming_fatigue(user, 5) //replace with herbalism/alchemy version if/when it's added
 			playsound(src, 'sound/items/wood_sharpen.ogg', 100, TRUE)

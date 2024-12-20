@@ -25,12 +25,17 @@
 */
 /datum/supply_pack/rogue/tools/chains
 	name = "Chains"
-	cost = 55
+	cost = 60 //3 iron
 	contains = list(
 					/obj/item/rope/chain,
 					/obj/item/rope/chain,
 					/obj/item/rope/chain,
 				)
+
+/datum/supply_pack/rogue/tools/lockpicks
+	name = "Lockpicks"
+	cost = 30
+	contains = list(/obj/item/lockpickring/mundane)
 
 /datum/supply_pack/rogue/tools/sacks
 	name = "Sacks"
@@ -125,14 +130,16 @@
 /datum/supply_pack/rogue/tools/keyrings
 	name = "Keyrings"
 	cost = 20
-	contains = list(/obj/item/keyring,
-					/obj/item/keyring,
-					/obj/item/keyring)
+	contains = list(/obj/item/storage/keyring,
+					/obj/item/storage/keyring,
+					/obj/item/storage/keyring)
 
 /datum/supply_pack/rogue/tools/needles
 	name = "Needles"
-	cost = 15
+	cost = 20
 	contains = list(/obj/item/needle,
+					/obj/item/needle,
+					/obj/item/needle,
 					/obj/item/needle,
 					/obj/item/needle)
 

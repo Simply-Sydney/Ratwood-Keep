@@ -25,11 +25,6 @@
 	cost = 25
 	contains = list(/obj/item/clothing/head/roguetown/helmet/leather)
 
-/datum/supply_pack/rogue/bandit/Knave/leather/Lhelmet
-	name = "Reinforced hood"
-	cost = 100
-	contains = list(/obj/item/clothing/head/roguetown/roguehood/reinforced)
-
 /datum/supply_pack/rogue/bandit/Knave/helmet/hhelmet
 	name = "Horned cap"
 	cost = 100
@@ -134,3 +129,13 @@
 	name = "Mancatcher"
 	cost = 50
 	contains = list(/obj/item/restraints/legcuffs/beartrap)
+
+/datum/supply_pack/rogue/bandit/Knave/lockpick
+	name = "lockpick"
+	cost = 40
+	contains = list(/obj/item/lockpick)
+
+/datum/supply_pack/rogue/bandit/Knave/lockpickring
+	name = "Full lockpicking ring"
+	cost = 150
+	contains = list(/obj/item/lockpickring/mundane)

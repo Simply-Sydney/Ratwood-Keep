@@ -48,6 +48,12 @@
 	var/spell_points
 	var/used_spell_points
 
+	//Lesser Necromancy Trackers
+	var/boneboys = 0
+	var/bonemax = 0
+	var/boneboy = FALSE
+	var/bonenecro = null
+
 	var/linglink
 	var/datum/martial_art/martial_art
 	var/static/default_martial_art = new/datum/martial_art
@@ -307,6 +313,7 @@
 			to_chat(current, span_nicegreen("My [S.name] grows to [SSskills.level_names[known_skills[S]]]!"))
 		if(skill == /datum/skill/magic/arcane)
 			adjust_spellpoints(1)
+			adjust_bonemax(1)
 	else
 		to_chat(current, span_warning("My [S.name] has weakened to [SSskills.level_names[known_skills[S]]]!"))
 
@@ -327,6 +334,7 @@
 	var/amt2gain = 0
 	if(skill == /datum/skill/magic/arcane)
 		adjust_spellpoints(amt)
+		adjust_bonemax(amt)
 	for(var/i in 1 to amt)
 		switch(skill_experience[S])
 			if(SKILL_EXP_MASTER to SKILL_EXP_LEGENDARY)
@@ -373,6 +381,18 @@
 /datum/mind/proc/adjust_spellpoints(points)
 	spell_points += points
 
+/datum/mind/proc/adjust_bonemax(points)
+	bonemax += points
+
+/datum/mind/proc/adjust_boneboys(points)
+	boneboys += points
+
+/datum/mind/proc/set_bonenecro(name)
+	bonenecro = name
+
+/datum/mind/proc/set_boneboy(value)
+	boneboy = value
+
 ///Gets the skill's singleton and returns the result of its get_skill_speed_modifier
 /datum/mind/proc/get_skill_speed_modifier(skill)
 	var/datum/skill/S = GetSkillRef(skill)
@@ -400,8 +420,11 @@
 		return
 	var/msg = ""
 	msg += span_info("*---------*\n")
-	for(var/i in shown_skills)
-		msg += "[i] - [SSskills.level_names[known_skills[i]]]\n"
+	for(var/datum/i in shown_skills)
+		var/can_advance_post = sleep_adv.enough_sleep_xp_to_advance(i.type, 1)
+		var/capped_post = sleep_adv.enough_sleep_xp_to_advance(i.type, 2)
+		var/rankup_postfix = capped_post ? span_nicegreen(" <b>(!!)</b>") : can_advance_post ? span_nicegreen(" <b>(!)</b>") : ""
+		msg += "[i] - [SSskills.level_names[known_skills[i]]][rankup_postfix]\n"
 	msg += "</span>"
 	to_chat(user, msg)
 
@@ -473,13 +496,6 @@
 			if(istype(A))
 				if(A.type == datum_type)
 					return A
-
-/datum/mind/proc/remove_traitor()
-	remove_antag_datum(/datum/antagonist/traitor)
-
-
-/datum/mind/proc/remove_all_antag() //For the Lazy amongst us.
-	remove_traitor()
 
 /datum/mind/proc/equip_traitor(employer = "The Syndicate", silent = FALSE, datum/antagonist/uplink_owner)
 	return
@@ -679,12 +695,6 @@
 		O.update_explanation_text()
 		to_chat(current, "<B>[O.flavor] #[obj_count]</B>: [O.explanation_text]")
 		obj_count++
-
-
-/datum/mind/proc/make_Traitor()
-	if(!(has_antag_datum(/datum/antagonist/traitor)))
-		add_antag_datum(/datum/antagonist/traitor)
-
 
 /datum/mind/proc/AddSpell(obj/effect/proc_holder/spell/S)
 	if(!S)
